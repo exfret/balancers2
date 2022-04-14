@@ -21,8 +21,18 @@ Matrix identityMatrix(int size);
 // Extract a column from a matrix
 Row getColumn(Matrix matrix, int column_position);
 
-// Transpos a matrix
+// Transpose a matrix
 Matrix transpose(Matrix matrix);
+
+// Switch two rows of a matrix
+Matrix switch_rows(Matrix matrix, int row1_ind, int row2_ind);
+
+// Switch two columns of a matrix
+Matrix switch_cols(Matrix matrix, int col1_ind, int col2_ind);
+
+// Put a flow matrix into a "normal form" for easier comparison of flows
+// Assumes the matrix has positive values (which is always the case for a flow matrix)
+Matrix normalize(Matrix matrix);
 
 // Generate an empty network
 Network emptyNetwork(int size);

@@ -1,5 +1,6 @@
 // Tools for the Network/Matrix domain
 
+#include "matrix.h"
 #include "types.h"
 #include "utils.h"
 
@@ -72,6 +73,62 @@ Matrix transpose(Matrix matrix) {
     }
     
     return transpose_matrix;
+}
+
+Matrix switch_rows(Matrix matrix, int row1_ind, int row2_ind) {
+    Row row1 = matrix[row1_ind];
+    Row row2 = matrix[row2_ind];
+    
+    matrix[row2_ind] = row1;
+    matrix[row1_ind] = row2;
+    
+    return matrix;
+}
+
+Matrix switch_cols(Matrix matrix, int col1_ind, int col2_ind) {
+    Row col1;
+    for (int row = 0; row < matrix.size(); ++row) {
+        col1.push_back(matrix[row][col1_ind]);
+    }
+    Row col2;
+    for (int row = 0; row < matrix.size(); ++row) {
+        col2.push_back(matrix[row][col2_ind]);
+    }
+    
+    for (int row = 0; row < matrix.size(); ++row) {
+        matrix[row][col1_ind] = col2[row];
+    }
+    for (int row = 0; row < matrix.size(); ++row) {
+        matrix[row][col2_ind] = col1[row];
+    }
+    
+    return matrix;
+}
+
+Matrix normalize(Matrix matrix) {
+    if (matrix.size() == 0 || matrix[0].size() == 0) {
+        return {};
+    }
+    
+    for (int i = 0; i < min(matrix.size(), matrix[0].size()); ++i) {
+        int max_row_ind = 0;
+        int max_col_ind = 0;
+        double max_val = 0;
+        for (int row = i; row < matrix.size(); ++row) {
+            for (int col = i; col < matrix[row].size(); ++col) {
+                if (matrix[row][col] > max_val) {
+                    max_row_ind = row;
+                    max_col_ind = col;
+                    max_val = matrix[row][col];
+                }
+            }
+        }
+        
+        matrix = switch_rows(matrix, i, max_row_ind);
+        matrix = switch_cols(matrix, i, max_col_ind);
+    }
+    
+    return matrix;
 }
 
 Network emptyNetwork(int size) {
